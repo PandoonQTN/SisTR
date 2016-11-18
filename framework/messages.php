@@ -33,13 +33,7 @@ class Messages {
         if ($type != self::MESSAGE_ERROR && $type != self::MESSAGE_WARNING && $type != self::MESSAGE_SUCCESS) {
             throw new Error("Mauvais type");
         }
-        self::$_messages[] = 
-        array {
-            "message" => $message;   
-            "type" => $type;   
-            
-            
-        }
+        self::$_messages[] = array("message" => $message, "type" => $type);
     }
 
     /**
@@ -57,7 +51,7 @@ class Messages {
      * @throws Error
      */
     public static function getMessage($num = 0) {
-        if (isset(self::$_messages[$num])) {
+        if (!isset(self::$_messages[$num])) {
             throw new Error("Index hors tableau");
         }
         return self::$_messages[$num];
@@ -67,7 +61,7 @@ class Messages {
      * Setter de renderer
      * @param type $renderer
      */
-    public static function setMessageRender($renderer) {
+    public static function setMessageRenderer($renderer) {
         self::$_renderer = $renderer;
     }
 
@@ -87,10 +81,20 @@ class Messages {
     public static function defaultRenderer() {
         foreach (self::$_messages as $m) :
             ?>
-            <div><?php echo $m ?></div>
-                <?php
-            endforeach;
-        }
+            <div><?php
+                $res = "";
+                if ($m['type'] == self::MESSAGE_SUCCESS) {
+                    $res = "Succès : ";
+                } else if ($m['type'] == self::MESSAGE_WARNING) {
+                    $res = "Attention : ";
+                } else if ($m['type'] == self::MESSAGE_ERROR) {
+                    $res = "Erreur : ";
+                }
 
+                echo $res.$m["message"];
+                ?></div>
+            <?php
+        endforeach;
     }
-    
+
+}

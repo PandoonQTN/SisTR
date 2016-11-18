@@ -4,11 +4,11 @@ namespace Sistr;
 
 defined('SISTR') or die("Accès interdit");
 $this->setPageTitle("vue 1");
+\F3il\Messages::setMessageRenderer('\Sistr\MessagesHelper::messagesRenderer');
 ?>
 
 <div> 
     <h2>Vue 1</h2>
-    [%MESSAGES%]
     <p><?php echo __FILE__;
 ?>
         <br>

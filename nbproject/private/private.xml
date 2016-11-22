@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/SisTR/application/controllers/utilisateur.controller.php</file>
-            <file>file:/C:/wamp/www/SisTR/framework/database.php</file>
-            <file>file:/C:/wamp/www/SisTR/application/templates/template-a.template.php</file>
-            <file>file:/C:/wamp/www/SisTR/application/views/vue1.view.php</file>
-            <file>file:/C:/wamp/www/SisTR/framework/messages.php</file>
-            <file>file:/C:/wamp/www/SisTR/framework/page.php</file>
+            <file>file:/C:/wamp/www/Sistr/application/views/form.view.php</file>
+            <file>file:/C:/wamp/www/Sistr/framework/form.php</file>
+            <file>file:/C:/wamp/www/Sistr/framework/field.php</file>
+            <file>file:/C:/wamp/www/Sistr/application/forms/test.form.php</file>
         </group>
     </open-files>
 </project-private>

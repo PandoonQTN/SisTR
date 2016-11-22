@@ -1,6 +1,5 @@
 <?php 
     define('SISTR', '');
-    require_once './framework/f3il.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +15,6 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        // put your code here
         ?>
     </body>
 </html>

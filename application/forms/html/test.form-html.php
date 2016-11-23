@@ -1,18 +1,22 @@
 <?php
+
 namespace Sistr;
+
 defined('SISTR') or die('Acces interdit');
 ?>
-<form method="POST" action="?controller=form&action=form" class="form-horizontal">
+<form method="POST" action="<?php echo $this->getAction(); ?>" class="form-horizontal">
     <div class="form-group">
-        <label for="email" class="col-sm-2 control-label">Email : </label>
+        <label for="<?php echo $this->fName('email'); ?>" class="col-sm-2 control-label">
+                <?php echo $this->fLabel('email'); ?> :
+        </label>
         <div class="col-sm-10">
-            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            <input type="<?php echo $this->fName('email'); ?>" class="form-control" id="<?php echo $this->fName('email'); ?>" name="<?php echo $this->fName('email'); ?>" placeholder="<?php echo $this->fLabel('email'); ?>">
         </div>
     </div>
     <div class="form-group">
-        <label for="age" class="col-sm-2 control-label">Age : </label>
+        <label for="<?php echo $this->fName('age'); ?>" class="col-sm-2 control-label"><?php echo $this->fLabel('age'); ?> : </label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" id="age" name="age" placeholder="Age">
+            <input type="number" class="form-control" id="<?php echo $this->fName('age'); ?>" name="<?php echo $this->fName('age'); ?>" placeholder="<?php echo $this->fLabel('age'); ?>">
         </div>
     </div>
     <div class="form-group">

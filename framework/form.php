@@ -120,9 +120,9 @@ abstract class Form {
 
     protected function applyFilter($fieldName, $rawValue) {
         $nom = str_replace('-', '', lcfirst(ucwords($fieldName, '-'))) . 'Filter';
-        echo $nom."<br>";
+        
         if (method_exists($this, $nom)) {
-            return $this->$nom();
+            return $this->$nom($rawValue);
         } else {
             return $rawValue;
         }

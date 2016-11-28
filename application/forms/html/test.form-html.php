@@ -10,13 +10,13 @@ defined('SISTR') or die('Acces interdit');
                 <?php echo $this->fLabel('email'); ?> :
         </label>
         <div class="col-sm-10">
-            <input type="<?php echo $this->fName('email'); ?>" class="form-control" id="<?php echo $this->fName('email'); ?>" name="<?php echo $this->fName('email'); ?>" placeholder="<?php echo $this->fLabel('email'); ?>">
+            <input type="text" class="form-control" id="<?php echo $this->fName('email'); ?>" name="<?php echo $this->fName('email'); ?>" placeholder="<?php echo $this->fLabel('email'); ?>">
         </div>
     </div>
     <div class="form-group">
         <label for="<?php echo $this->fName('age'); ?>" class="col-sm-2 control-label"><?php echo $this->fLabel('age'); ?> : </label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" id="<?php echo $this->fName('age'); ?>" name="<?php echo $this->fName('age'); ?>" placeholder="<?php echo $this->fLabel('age'); ?>">
+            <input type="text" class="form-control" id="<?php echo $this->fName('age'); ?>" name="<?php echo $this->fName('age'); ?>" placeholder="<?php echo $this->fLabel('age'); ?>">
         </div>
     </div>
     <div class="form-group">

@@ -12,8 +12,8 @@ class TestForm extends \F3il\Form {
         $this->addFormField(new \F3il\Field('age','Age'));        
     }
     
-    public function ageFilter($value) {
-        die("ageFilter");
+    public function ageFilter($data) {
+        return filter_var($data,FILTER_SANITIZE_STRING);
     }
 
 }

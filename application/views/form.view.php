@@ -16,5 +16,6 @@ $this->setPageTitle("Form");
 <pre>
 <?php
     print_r($this->form);
+    print_r($this->message);
 ?>
 </pre>

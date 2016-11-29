@@ -89,9 +89,9 @@ abstract class Form {
      */
     public function loadDataFromInput($source) {
         foreach ($this->_fields as $field) {
-            $field->value = $this->applyFilter($field->name,trim(filter_input($source, $field->name)));
+            $field->value = $this->applyFilter($field->name, trim(filter_input($source, $field->name)));
             if (empty($field->value) && $field->required) {
-                $this->_missingFields = $field->name;
+                $this->_missingFields[] = $field->name;
             } else {
                 
             }
@@ -108,7 +108,7 @@ abstract class Form {
             if (array_key_exists($field->name, $source)) {
                 var_dump(filter_var($source[$field->name]));
                 if (!empty(trim($source[$field->name]))) {
-                    $field->value = $this->applyFilter($field->name,filter_var($source[$field->name]));
+                    $field->value = $this->applyFilter($field->name, filter_var($source[$field->name]));
                 } else {
                     if ($field->required) {
                         $this->_missingFields[] = $field->name;
@@ -120,11 +120,56 @@ abstract class Form {
 
     protected function applyFilter($fieldName, $rawValue) {
         $nom = str_replace('-', '', lcfirst(ucwords($fieldName, '-'))) . 'Filter';
-        
+
         if (method_exists($this, $nom)) {
             return $this->$nom($rawValue);
         } else {
             return $rawValue;
+        }
+    }
+
+    public function isValid() {
+        $valid = TRUE;
+        foreach ($this->_fields as $f) {
+            if (in_array($f->name, $this->_missingFields)) {
+                $valid = FALSE;
+            }
+            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields)) {
+                $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';
+                if (method_exists($this, $nom)) {
+                    $valid = $this->$nom($f->value) && $valid;
+                }
+            }
+        }
+        return $valid;
+    }
+
+    public function addMessage($fieldName, $message) {
+        if (!array_key_exists($fieldName, $this->_fields)) {
+            throw new Error("Champs du formulaire inexistant");
+        }
+        $this->_fields[$fieldName]->addMessage($message);
+    }
+
+    public function getValidationMessage($fieldName) {
+        if (!array_key_exists($fieldName, $this->_fields)) {
+            throw new Error("Champs du formulaire inexistant");
+        }
+        return $this->_fields[$fieldName]->getMessage();
+    }
+
+    public function messageRenderer($message) {
+        ?> 
+        <p><?php echo $message;?></p>
+        <?php
+    }
+
+    public function fMessages($fieldName) {
+        if (!array_key_exists($fieldName, $this->_fields)) {
+            throw new Error("Champs du formulaire inexistant");
+        }
+        foreach ($this->_fields[$fieldName]->getMessage() as $m) {
+            $this->messageRenderer($m);
         }
     }
 

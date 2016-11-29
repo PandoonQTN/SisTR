@@ -11,12 +11,21 @@ class Field {
     public $required;
     public $value;
     public $defaultValue;
+    protected $message = array();
 
     public function __construct($name, $label, $defaultValue = null, $required = false) {
         $this->name = $name;
         $this->label = $label;
         $this->defaultValue = $defaultValue;
         $this->required = $required;
+    }
+
+    public function addMessage($message) {
+        $this->message[] = $message;
+    }
+
+    public function getMessage() {
+        return $this->message;
     }
 
 }

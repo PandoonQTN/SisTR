@@ -12,6 +12,12 @@ class FormController extends \F3il\Controller {
         $form = new TestForm("?controller=form&action=form");        
         $page->form = $form;
         $form->loadData(INPUT_POST);
+        if($form->isValid()){
+            $page->message = "Valide";
+        }else{
+            
+            $page->message = "Non valide";
+        }
     }
 
 }

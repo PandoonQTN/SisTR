@@ -4,7 +4,6 @@ namespace Sistr;
 
 defined('SISTR') or die("Accès interdit");
 $this->setPageTitle("Form");
-
 ?> 
 
 <h2>Form Test</h2>
@@ -15,7 +14,7 @@ $this->setPageTitle("Form");
 ?>
 <pre>
 <?php
+    print_r($this->formData);
     print_r($this->form);
-    print_r($this->message);
 ?>
 </pre>

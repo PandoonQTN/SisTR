@@ -10,13 +10,15 @@ class FormController extends \F3il\Controller {
         $page = \F3il\Page::getInstance();
         $page->setTemplate("template-bt")->setView("form");
         $form = new TestForm("?controller=form&action=form");        
-        $page->form = $form;
-        $form->loadData(INPUT_POST);
-        if($form->isValid()){
+        $page->form = $form;        
+        $form->loadData(INPUT_POST);  
+        $page->formData = $form->getData();
+        if($form->isValid()){           
             $page->message = "Valide";
-        }else{
-            
+            \F3il\Messenger::setMessage("Le formulaire est valide");
+        }else{           
             $page->message = "Non valide";
+            \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
         }
     }
 

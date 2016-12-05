@@ -133,6 +133,7 @@ abstract class Form {
         foreach ($this->_fields as $f) {
             if (in_array($f->name, $this->_missingFields)) {
                 $valid = FALSE;
+                $this->missingFieldMessageRenderer($f);
             }
             if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields)) {
                 $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';
@@ -160,7 +161,7 @@ abstract class Form {
 
     public function messageRenderer($message) {
         ?> 
-        <p><?php echo $message;?></p>
+        <p><?php echo $message; ?></p>
         <?php
     }
 
@@ -171,6 +172,21 @@ abstract class Form {
         foreach ($this->_fields[$fieldName]->getMessage() as $m) {
             $this->messageRenderer($m);
         }
+    }
+
+    public function missingFieldMessageRenderer($field) {
+        ?> 
+        <p class="text-danger text-right">Le champs <?php echo $field->name; ?> est manquant.</p>
+        <?php
+    }
+
+    public function getData() {
+
+        $tab = array();
+        foreach ($this->_fields as $f) {
+            $tab[$f->name] = $f->value;
+        }
+        return $tab;
     }
 
 }

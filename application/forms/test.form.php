@@ -26,17 +26,23 @@ class TestForm extends \F3il\Form {
             if ($nb >= 18 && $nb <= 35) {
                 return TRUE;
             } else {
-                $this->addMessage('age', "L'age doit être compris entre 18 et 35");$this->fMessages('age');
+                $this->addMessage('age', "L'age doit être compris entre 18 et 35");
+                $this->fMessages('age');
                 return FALSE;
             }
-        }
-        
+        }        
         return TRUE;
     }
 
     public function messageRenderer($message) {
         ?> 
         <p class="text-danger text-right"><?php echo $message; ?></p>
+        <?php
+    }
+    
+    public function missingFieldMessageRenderer($field) {
+                ?> 
+         <p class="text-danger text-right">Veuillez remplir le champ <?php echo $field->name;?>.</p>
         <?php
     }
 

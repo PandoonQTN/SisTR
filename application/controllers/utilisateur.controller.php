@@ -50,5 +50,37 @@ class UtilisateurController extends \F3il\Controller {
             \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         }
     }
+    
+    public function creerAction() {
+        //Récupérer l'instance de la page 
+        $page = \F3il\Page::getInstance();
+        
+        //Régler le template et la vue 
+        $page->setTemplate("template-bt")->setView("form");
+        
+        //Créer l'ojet formulaire
+        $form = new UtilisateurForm("?controller=utilisateur&action=creer");        
+        //$form->id = 0;
+        //Rattacher l'objet formulaire à la page
+        $page->form = $form;        
+               
+        //Si le formulaire n'a pas été envoyé
+        if(!$form->isSubmitted()){
+            return;
+        }
+        
+        //Charger les données depuis POST
+        $form->loadData(INPUT_POST);   
+        
+        
+        //Si le formulaire n'est pas valide
+        if($form->isValid()){           
+            $page->message = "Valide";
+            \F3il\Messenger::setMessage("Le formulaire est valide");
+        }else{           
+            $page->message = "Non valide";
+            \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
+        }
+    }
 
 }

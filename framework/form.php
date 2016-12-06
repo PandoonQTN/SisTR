@@ -10,14 +10,17 @@ abstract class Form {
     protected $_fields = array();
     protected $_action;
     protected $_missingFields = array();
+    private $_formId;
 
-    public function __construct($action) {
-        $this->getHtmlFile();
+    public function __construct($action, $formId) {
         $this->_action = $action;
+        $this->_formId = $formId;
+        $this->getHtmlFile();
     }
 
     public function render() {
         require $this->_html;
+        $this->insertFormId();
     }
 
     public function getHtmlFile() {
@@ -27,6 +30,9 @@ abstract class Form {
         $ch = substr($ch, 1, $pos - strlen($ch));
         if (is_readable(APPLICATION_PATH . "\\forms\\html\\" . strtolower($ch) . ".form-html.php")) {
             $this->_html = APPLICATION_PATH . "\\forms\\html\\" . strtolower($ch) . ".form-html.php";
+            if (!strpos(file_get_contents($this->_html), $this->_formId)) {
+                throw new Error("Erreur le formId est manquant");
+            }
         } else {
             throw new Error("Erreur avec la variable \$_html");
         }
@@ -90,7 +96,7 @@ abstract class Form {
     public function loadDataFromInput($source) {
         foreach ($this->_fields as $field) {
             $field->value = $this->applyFilter($field->name, trim(filter_input($source, $field->name)));
-            if (empty($field->value) && $field->required) {
+            if (empty(trim($field->value)) && $field->required) {
                 $this->_missingFields[] = $field->name;
             } else {
                 
@@ -181,7 +187,6 @@ abstract class Form {
     }
 
     public function getData() {
-
         $tab = array();
         foreach ($this->_fields as $f) {
             $tab[$f->name] = $f->value;
@@ -189,4 +194,39 @@ abstract class Form {
         return $tab;
     }
 
+    public function insertFormId() {
+        ?><input type="hidden" name="<?php echo $this->_formId; ?>" value="1" form="<?php echo $this->_formId ?>"><?php
+    }
+
+    public function isSubmitted() {
+        $serv = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
+        $post = filter_input(INPUT_POST, $this->_formId);
+        if ($serv == 'POST' && $post == 1) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function __get($fieldName) {
+        if (!array_key_exists($fieldName, $this->_fields)) {
+            throw new Error("Champs du formulaire inexistant");
+        }
+        return $this->_fields[$fieldName];
+    }
+    public function __set($fieldName, $value) {
+        $this->data[$fieldName] = $value;
+    }
+
+    public function __isset($fieldName) {
+        return isset($this->_fields[$fieldName]);
+    }
+    
+    
+    public function getField($fieldName) {
+        if (!array_key_exists($fieldName, $this->_fields)) {
+            throw new Error("Champs du formulaire inexistant");
+        }
+        return $this->_fields[$fieldName];
+    }
 }

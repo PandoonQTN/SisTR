@@ -5,9 +5,14 @@
         <group>
             <file>file:/C:/wamp64/www/SisTR/framework/form.php</file>
             <file>file:/C:/wamp64/www/SisTR/application/forms/test.form.php</file>
+            <file>file:/C:/wamp64/www/SisTR/application/controllers/utilisateur.controller.php</file>
             <file>file:/C:/wamp64/www/SisTR/framework/field.php</file>
+            <file>file:/C:/wamp64/www/SisTR/application/forms/html/utilisateur.form-html.php</file>
             <file>file:/C:/wamp64/www/SisTR/application/views/form.view.php</file>
             <file>file:/C:/wamp64/www/SisTR/application/controllers/form.controller.php</file>
+            <file>file:/C:/wamp64/www/SisTR/application/forms/utilisateur.form.php</file>
+            <file>file:/C:/wamp64/www/SisTR/application/forms/html/test.form-html.php</file>
+            <file>file:/C:/wamp64/www/SisTR/framework/page.php</file>
         </group>
     </open-files>
 </project-private>

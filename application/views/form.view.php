@@ -14,7 +14,6 @@ $this->setPageTitle("Form");
 ?>
 <pre>
 <?php
-    print_r($this->formData);
     print_r($this->form);
 ?>
 </pre>

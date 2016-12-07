@@ -55,6 +55,10 @@ class UtilisateurController extends \F3il\Controller {
         //Récupérer l'instance de la page 
         $page = \F3il\Page::getInstance();
         
+        //Créer l'instance du model
+        $model = new UtilisateursModel();
+        
+        
         //Régler le template et la vue 
         $page->setTemplate("template-bt")->setView("form");
         
@@ -72,6 +76,7 @@ class UtilisateurController extends \F3il\Controller {
         //Charger les données depuis POST
         $form->loadData(INPUT_POST);   
         
+        $model->creer($form->getData());
         
         //Si le formulaire n'est pas valide
         if($form->isValid()){           

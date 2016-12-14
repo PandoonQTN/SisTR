@@ -20,6 +20,9 @@ abstract class FormHelper {
                        name="<?php echo $form->fName($fieldName); ?>" 
                        placeholder="<?php echo $form->fLabel($fieldName); ?>">
             </div>
+            <?php 
+            echo $form->missingFieldMessageRenderer($form->getField($fieldName));
+            echo $form->fMessages($fieldName); ?>
         </div>
         <?php
     }

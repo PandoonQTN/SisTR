@@ -49,20 +49,22 @@ class UtilisateursModel {
     }
     public function loginExistant($login, $id) {
         $db = \F3il\Database::getInstance();
-        $sql = "SELECT count(*) FROM utilisateurs WHERE login =:loing";
-        if ($id != 0) {
-            $sql += " AND id = :id";
-        }
+        $sql = "SELECT count(*) as res FROM utilisateurs WHERE login =:login";
+       
+        if (intval($id) != 0) {
+            $sql = $sql . " AND id = :id";
+        } 
         try {
             $req = $db->prepare($sql);
             $req->bindValue(':login', $login);
-            if ($id != 0)
-                $req->bindValue(':id', $id);
+            if (intval($id) != 0){
+                $req->bindValue(':id', intval($id));                
+            }
             $req->execute();
         } catch (\PDOException $ex) {
             throw new \F3il\SqlError($sql, $req, $ex);
         }
-        if ($req->fetch() != 0) {
+        if ($req->fetch(\PDO::FETCH_ASSOC)['res'] != 0) {
             return TRUE;
         } else {
             return FALSE;
@@ -81,5 +83,22 @@ class UtilisateursModel {
             throw new \F3il\SqlError($sql, $req, $ex);
         }
         return $req->fetch(\PDO::FETCH_ASSOC);
+    }
+    
+    public function mettreAJour($data){
+         $db = \F3il\Database::getInstance();
+        $sql = "UPDATE utilisateurs SET nom = :nom, prenom = :prenom, email = :email, login = :login, motdepasse = :motdepasse  WHERE id = :id";
+        try {
+            $req = $db->prepare($sql);
+            $req->bindValue(':id',$data['id']);
+            $req->bindValue(':nom',$data['nom']);
+            $req->bindValue(':prenom',$data['prenom']);
+            $req->bindValue(':email',$data['email']);
+            $req->bindValue(':login',$data['login']);
+            $req->bindValue(':motdepasse',$data['motdepasse']);
+            $req->execute();
+        } catch (\PDOException $ex) {
+            throw new \F3il\SqlError($sql, $req, $ex);
+        }
     }
 }

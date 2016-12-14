@@ -58,7 +58,9 @@ class UtilisateurController extends \F3il\Controller {
 
         //Créer l'ojet formulaire
         $form = new UtilisateurForm("?controller=utilisateur&action=creer");
-        //$form->id = 0;
+
+        $fieldid = $form->getField('id');
+        $fieldid->value = 0;
         //Rattacher l'objet formulaire à la page
         $page->form = $form;
 
@@ -103,9 +105,9 @@ class UtilisateurController extends \F3il\Controller {
         $id = $formData['id'];
 
         $fieldmdp = $form->getField('motdepasse');
-        $fieldmdp->requiered = FALSE;
+        $fieldmdp->required = FALSE;
         $fieldconfirmation = $form->getField('confirmation');
-        $fieldconfirmation->requiered = FALSE;
+        $fieldconfirmation->required = FALSE;
 
         //Rattacher l'objet formulaire à la page
         $page->form = $form;
@@ -114,7 +116,13 @@ class UtilisateurController extends \F3il\Controller {
         if (!$form->isSubmitted()) {
             $newFormData = $model->lire($id);
             var_dump($newFormData);
-            //$form->loadData($newFormData);
+            var_dump(TRUE && FALSE);
+            $form->loadData($newFormData);
+            $form->getField('id')->value;
+            $form->getField('nom')->value;
+            $form->getField('prenom')->value;
+            $form->getField('email')->value;
+            $form->getField('login')->value;
             $fieldmdp->value = "";
             $fieldconfirmation->value = "";
         }
@@ -123,12 +131,12 @@ class UtilisateurController extends \F3il\Controller {
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
             $page->message = "Valide";
-           // \F3il\Messenger::setMessage("Le formulaire est valide");
-           // \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été enregisté");
-           // \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
+            // \F3il\Messenger::setMessage("Le formulaire est valide");
+            // \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été enregisté");
+            // \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
             $page->message = "Non valide";
-           // \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
+            // \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
         }
     }
 

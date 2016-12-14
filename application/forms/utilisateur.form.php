@@ -49,7 +49,6 @@ class UtilisateurForm extends Form {
         $nb = filter_var($data, FILTER_VALIDATE_EMAIL);
         if (empty(trim($nb))) {
             $this->addMessage('email', "L'email n'est pas valide");
-            $this->fMessages('email');
             return FALSE;
         } else {
             return TRUE;
@@ -59,20 +58,17 @@ class UtilisateurForm extends Form {
     public function loginValidator($data) {
         $model = new UtilisateursModel();
         $nb = filter_var($data, FILTER_SANITIZE_STRING);        
-        $nb2 = $this->getField('id');
+        $nb2 = $this->getField('id')->value;
         if ($model->loginExistant($nb,$nb2)) {
             $this->addMessage('login', "Ce login existe déjà");
-            $this->fMessages('login');
             return FALSE;
         } else {
-            if (strlen($nb) <= 6) {
+            if (strlen($nb) < 6) {
                 $this->addMessage('login', "le login doit faire au moins 6 caractères");
-                $this->fMessages('login');
                 return FALSE;
             }
             if (strstr($nb, " ")) {
                 $this->addMessage('login', "le login ne doit pas contenir d'espaces");
-                $this->fMessages('login');
                 return FALSE;
             }
         }
@@ -83,7 +79,6 @@ class UtilisateurForm extends Form {
         $nb = filter_var($data, FILTER_SANITIZE_STRING);
         if (strlen($nb) <= 4) {
             $this->addMessage('motdepasse', "le mot de passe doit faire au moins 4 caractères");
-            $this->fMessages('motdepasse');
             return FALSE;
         }
         return TRUE;
@@ -96,9 +91,16 @@ class UtilisateurForm extends Form {
             return TRUE;
         } else {
             $this->addMessage('confirmation', "les deux mots de passe ne sont pas identique");
-            $this->fMessages('confirmation');
             return FALSE;
         }
     }
 
+    public function isValid() {
+        $valid = parent::isValid();
+        if($this->id == 0) return $valid;
+        if($this->motdepasse != '' && $this->confirmation == ''){
+            $valid = $this->confirmationValidator($this->confirmation) && $valid;
+        }
+        return $valid;
+    }
 }

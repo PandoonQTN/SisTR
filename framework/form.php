@@ -112,6 +112,7 @@ abstract class Form {
     public function loadDataFromArray($source) {
         foreach ($this->_fields as $field) {
             if (array_key_exists($field->name, $source)) {
+
                 var_dump(filter_var($source[$field->name]));
                 if (!empty(trim($source[$field->name]))) {
                     $field->value = $this->applyFilter($field->name, filter_var($source[$field->name]));
@@ -139,9 +140,8 @@ abstract class Form {
         foreach ($this->_fields as $f) {
             if (in_array($f->name, $this->_missingFields)) {
                 $valid = FALSE;
-                $this->missingFieldMessageRenderer($f);
             }
-            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields)) {
+            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields) || !empty($f->required)) {
                 $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';
                 if (method_exists($this, $nom)) {
                     $valid = $this->$nom($f->value) && $valid;
@@ -214,6 +214,7 @@ abstract class Form {
         }
         return $this->_fields[$fieldName];
     }
+
     public function __set($fieldName, $value) {
         $this->data[$fieldName] = $value;
     }
@@ -221,12 +222,12 @@ abstract class Form {
     public function __isset($fieldName) {
         return isset($this->_fields[$fieldName]);
     }
-    
-    
+
     public function getField($fieldName) {
         if (!array_key_exists($fieldName, $this->_fields)) {
             throw new Error("Champs du formulaire inexistant");
         }
         return $this->_fields[$fieldName];
     }
+
 }

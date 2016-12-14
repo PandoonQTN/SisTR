@@ -57,16 +57,24 @@ class UtilisateurForm extends Form {
     }
 
     public function loginValidator($data) {
-        $nb = filter_var($data, FILTER_SANITIZE_STRING);
-        if (strlen($nb) <= 6) {
-            $this->addMessage('login', "le login doit faire au moins 6 caractères");
+        $model = new UtilisateursModel();
+        $nb = filter_var($data, FILTER_SANITIZE_STRING);        
+        $nb2 = $this->getField('id');
+        if ($model->loginExistant($nb,$nb2)) {
+            $this->addMessage('login', "Ce login existe déjà");
             $this->fMessages('login');
             return FALSE;
-        }
-        if (strstr($nb, " ")) {
-            $this->addMessage('login', "le login ne doit pas contenir d'espaces");
-            $this->fMessages('login');
-            return FALSE;
+        } else {
+            if (strlen($nb) <= 6) {
+                $this->addMessage('login', "le login doit faire au moins 6 caractères");
+                $this->fMessages('login');
+                return FALSE;
+            }
+            if (strstr($nb, " ")) {
+                $this->addMessage('login', "le login ne doit pas contenir d'espaces");
+                $this->fMessages('login');
+                return FALSE;
+            }
         }
         return TRUE;
     }

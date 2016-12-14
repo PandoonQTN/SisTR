@@ -7,6 +7,13 @@ defined('SISTR') or die("Accès interdit");
 
 <h2>Liste des utilisateurs</h2>
 
+<div id="datagrid-commands">
+    <a href="?controller=utilisateur&action=creer">
+        <button class="btn btn-primary">Nouvel utilisateur</button>
+    </a>
+    <div class="col-lg-12"></div>
+</div>
+
 <table class="table table-bordered table-condensed table-hover table-striped">
     <thead>
         <tr>

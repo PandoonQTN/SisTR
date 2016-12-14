@@ -47,5 +47,39 @@ class UtilisateursModel {
             throw new \F3il\SqlError($sql, $req, $ex);
         }
     }
+    public function loginExistant($login, $id) {
+        $db = \F3il\Database::getInstance();
+        $sql = "SELECT count(*) FROM utilisateurs WHERE login =:loing";
+        if ($id != 0) {
+            $sql += " AND id = :id";
+        }
+        try {
+            $req = $db->prepare($sql);
+            $req->bindValue(':login', $login);
+            if ($id != 0)
+                $req->bindValue(':id', $id);
+            $req->execute();
+        } catch (\PDOException $ex) {
+            throw new \F3il\SqlError($sql, $req, $ex);
+        }
+        if ($req->fetch() != 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
+    public function lire($id) {
+        $db = \F3il\Database::getInstance();
+
+        $sql = "SELECT * FROM utilisateurs WHERE id= :id";
+        try {
+            $req = $db->prepare($sql);
+            $req->bindValue(':id', $id);
+            $req->execute();
+        } catch (\PDOException $ex) {
+            throw new \F3il\SqlError($sql, $req, $ex);
+        }
+        return $req->fetch(\PDO::FETCH_ASSOC);
+    }
 }

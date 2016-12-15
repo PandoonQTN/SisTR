@@ -23,7 +23,7 @@ class UtilisateurController extends \F3il\Controller {
 
     public function listerAction() {
         $page = \F3il\Page::getInstance();
-        $page->setTemplate("template-bt")->setView("utilisateur-liste");
+        $page->setTemplate("application")->setView("utilisateur-liste");
         $model = new UtilisateursModel();
         $page->utilisateurs = $model->lister();
         $mes = \F3il\Messenger::getMessage();
@@ -47,6 +47,7 @@ class UtilisateurController extends \F3il\Controller {
     }
 
     public function creerAction() {
+
         //Récupérer l'instance de la page 
         $page = \F3il\Page::getInstance();
 
@@ -54,13 +55,21 @@ class UtilisateurController extends \F3il\Controller {
         $model = new UtilisateursModel();
 
         //Régler le template et la vue 
-        $page->setTemplate("template-bt")->setView("form");
-
+        $page->setTemplate("application")->setView("utilisateur-form");
+        $page->setPageTitle("Créer utilisateur");
         //Créer l'ojet formulaire
         $form = new UtilisateurForm("?controller=utilisateur&action=creer");
+        if (!\F3il\CsrfHelper::checkTocken()) {
+            \F3il\Messenger::setMessage("Données de formulaire refusées");
+            if (\F3il\Messenger::getMessage()) {
+                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            }
+            return;
+        }
 
         $fieldid = $form->getField('id');
         $fieldid->value = 0;
+
         //Rattacher l'objet formulaire à la page
         $page->form = $form;
 
@@ -76,13 +85,14 @@ class UtilisateurController extends \F3il\Controller {
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
             $model->creer($formData);
-            $page->message = "Valide";
             \F3il\Messenger::setMessage("Le formulaire est valide");
             \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été enregisté");
             \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
-            $page->message = "Non valide";
             \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
+            if (\F3il\Messenger::getMessage()) {
+                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            }
         }
     }
 
@@ -94,11 +104,17 @@ class UtilisateurController extends \F3il\Controller {
         $model = new UtilisateursModel();
 
         //Régler le template et la vue 
-        $page->setTemplate("template-bt")->setView("form");
-
+        $page->setTemplate("application")->setView("utilisateur-form");
+        $page->setPageTitle("Modifier utilisateur");
         //Créer l'ojet formulaire
         $form = new UtilisateurForm("?controller=utilisateur&action=editer");
-
+        if (!\F3il\CsrfHelper::checkTocken()) {
+            \F3il\Messenger::setMessage("Données de formulaire refusées");
+            if (\F3il\Messenger::getMessage()) {
+                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            }
+            return;
+        }
 
         $form->loadData(INPUT_POST);
         $formData = $form->getData();
@@ -130,13 +146,14 @@ class UtilisateurController extends \F3il\Controller {
 
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
-            $page->message = "Valide";
-            // \F3il\Messenger::setMessage("Le formulaire est valide");
-            // \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été enregisté");
-            // \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
+            \F3il\Messenger::setMessage("Le formulaire est valide");
+            \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été modifié");
+            \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
-            $page->message = "Non valide";
-            // \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
+            \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
+            if (\F3il\Messenger::getMessage()) {
+                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            }
         }
     }
 

@@ -76,7 +76,7 @@
             
             require_once $filename;
             
-            if(!class_exists($classname)) throw new Error('Classe '.$classname.' non trouvée dans le fichier '.$filename);            
+            if(!class_exists($classname) && !interface_exists($classname)) throw new Error('Classe '.$classname.' non trouvée dans le fichier '.$filename);            
         }
         
         /**

@@ -18,11 +18,14 @@ abstract class FormHelper {
                 <input type="<?php echo $type ?>" 
                        class="form-control" id="<?php echo $form->fName($fieldName); ?>" 
                        name="<?php echo $form->fName($fieldName); ?>" 
+                       value="<?php echo $form->fValue($fieldName); ?>"
                        placeholder="<?php echo $form->fLabel($fieldName); ?>">
             </div>
             <?php 
-            echo $form->missingFieldMessageRenderer($form->getField($fieldName));
-            echo $form->fMessages($fieldName); ?>
+//            echo $form->fMessages($fieldName);
+//            if ($form->isSubmitted())
+//                echo $form->missingFieldMessageRenderer($form->getField($fieldName));
+            ?>
         </div>
         <?php
     }

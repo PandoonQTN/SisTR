@@ -49,7 +49,7 @@ class Application {
         } else {
             throw new Error("Pas de controleur par défaut");
         }
-        
+
         $controller = new $controllerClass();
         if (filter_has_var(INPUT_GET, 'action')) {
             $this->actionName = filter_input(INPUT_GET, 'action');
@@ -94,7 +94,7 @@ class Application {
      */
     public function setDefaultControllerName($name) {
         if (!is_readable(APPLICATION_PATH . "\\controllers\\" . $name . ".controller.php")) {
-            throw new Error("Le fichier ".APPLICATION_PATH . "\\controllers\\" . $name . ".controller.php n'est pas lisible");
+            throw new Error("Le fichier " . APPLICATION_PATH . "\\controllers\\" . $name . ".controller.php n'est pas lisible");
         } else {
             $this->defaultControllerName = $name;
         }
@@ -102,6 +102,26 @@ class Application {
 
     public function getDefaultControllerName() {
         return $this->defaultControllerName;
+    }
+
+    public function getControllerName() {
+        return $this->controllerName;
+    }
+
+    public function getActionName() {
+        return $this->actionName;
+    }
+
+    public function getCurrentLocation() {
+        return array(
+            'controller' => $this->getControllerName(),
+            'action' => $this->getActionName()
+        );
+    }
+
+    public function setAuthenticationDelegate($className) {
+        $class = APPLICATION_NAMESPACE . "\\" . $className;
+        Authentication::getInstance(new $class());
     }
 
 }

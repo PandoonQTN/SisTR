@@ -99,8 +99,8 @@ class Page {
         }
         ob_start();
         require $this->viewFile;
-        $this->viewHTML = ob_get_clean();        
-         $this->viewHTML = preg_replace_callback('/\[%\w+\%]/is', array($this, 'renderCallback'), $this->viewHTML);
+        $this->viewHTML = ob_get_clean();
+        $this->viewHTML = preg_replace_callback('/\[%\w+\%]/is', array($this, 'renderCallback'), $this->viewHTML);
         ob_start();
         require $this->templateFile;
         $this->templateHTML = ob_get_clean();
@@ -162,7 +162,7 @@ class Page {
      */
     public function addStyleSheet($cssFile) {
         $chemin = APPLICATION_NAMESPACE . "\\..\\css\\" . $cssFile . ".css";
-        var_dump($chemin);
+        //var_dump($chemin);
         if (is_readable($chemin)) {
             foreach ($this->cssFiles as $css) {
                 if (strcmp($css, $chemin) == 1) {
@@ -212,7 +212,7 @@ class Page {
     public function insertPageTitle() {
         ob_start();
         ?>
-        <title><?php echo $this->getPageTitle();?></title>
+        <title><?php echo $this->getPageTitle(); ?></title>
         <?php
         return ob_get_clean();
     }

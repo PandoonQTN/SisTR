@@ -4,7 +4,7 @@ namespace Sistr;
 
 defined('SISTR') or die('Acces interdit');
 
-use \F3il\Form;
+use F3il\Form;
 
 abstract class FormHelper {
 
@@ -21,10 +21,11 @@ abstract class FormHelper {
                        value="<?php echo $form->fValue($fieldName); ?>"
                        placeholder="<?php echo $form->fLabel($fieldName); ?>">
             </div>
-            <?php 
-//            echo $form->fMessages($fieldName);
-//            if ($form->isSubmitted())
-//                echo $form->missingFieldMessageRenderer($form->getField($fieldName));
+            <?php
+            if ($form->isSubmitted()) {
+                echo $form->fMessages($fieldName);
+                echo $form->missingFieldMessageRenderer($form->getField($fieldName));
+            }
             ?>
         </div>
         <?php

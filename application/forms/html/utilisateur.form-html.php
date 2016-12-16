@@ -4,7 +4,7 @@ namespace Sistr;
 
 defined('SISTR') or die('Acces interdit');
 ?>
-<form id="utilisateur-form" method="POST" action="<?php echo $this->getAction(); ?>" class="form-horizontal">
+<form id="utilisateur-form" method="POST" action="<?php echo $this->getAction(); ?>" class="col-lg-10 form-horizontal">
 
     <?php
     FormHelper::input($this, 'id', 'text');

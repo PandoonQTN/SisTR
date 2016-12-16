@@ -7,6 +7,7 @@ defined('SISTR') or die("Accès interdit");
 class SujetController extends \F3il\Controller {
 
     public function __construct() {
+        parent::redirectIfUnauthenticated("?controller=index&action=index");
         parent::setDefaultActionName("lister");
     }
 

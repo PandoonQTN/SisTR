@@ -36,4 +36,11 @@ interface AuthenticationInterface
      * @return array Utilisateur
      */
     public function auth_getUserById($id);
+    
+    /**
+     * Retourne une chaine
+     * @param type $user : utilisateur
+     * @return string 
+     */
+    public function auth_getSalt($user);
 }

@@ -32,16 +32,19 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
 
     public function creer($data) {
         $date = date('Y-m-j H:i:s');
+        $auth = \F3il\Authentication::getInstance();
+        $salt = $auth->hash($data['motdepasse'], $date);
         $db = \F3il\Database::getInstance();
-        $sql = "INSERT INTO utilisateurs (nom, prenom, email, login, motdepasse, creation) VALUES (:nom, :prenom, :email, :login, :motdepasse, :creation)";
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, login, motdepasse, creation, connexion) VALUES (:nom, :prenom, :email, :login, :motdepasse, :creation, :connexion)";
         try {
             $req = $db->prepare($sql);
             $req->bindValue(':nom', $data['nom']);
             $req->bindValue(':prenom', $data['prenom']);
             $req->bindValue(':email', $data['email']);
             $req->bindValue(':login', $data['login']);
-            $req->bindValue(':motdepasse', $data['motdepasse']);
+            $req->bindValue(':motdepasse', $salt);
             $req->bindValue(':creation', $date);
+            $req->bindValue(':connexion', $date);
             $req->execute();
         } catch (\PDOException $ex) {
             throw new \F3il\SqlError($sql, $req, $ex);
@@ -93,6 +96,12 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
             $sql = $sql . ", motdepasse = :motdepasse ";
         }
         $sql = $sql . " WHERE id = :id";
+
+
+        $auth = \F3il\Authentication::getInstance();
+        $date = $this->auth_getSalt($data['login']);
+        $salt = $auth->hash($data['motdepasse'], $date);
+
         try {
             $req = $db->prepare($sql);
             $req->bindValue(':id', $data['id']);
@@ -101,7 +110,7 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
             $req->bindValue(':email', $data['email']);
             $req->bindValue(':login', $data['login']);
             if (!empty($data['motdepasse'])) {
-                $req->bindValue(':motdepasse', $data['motdepasse']);
+                $req->bindValue(':motdepasse', $salt);
             }
             $req->execute();
         } catch (\PDOException $ex) {
@@ -132,12 +141,27 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         } catch (\PDOException $ex) {
             throw new \F3il\SqlError($sql, $req, $ex);
         }
-        
+
         return $req->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function auth_getUserIdKey() {
         return 'id';
+    }
+
+    public function auth_getSalt($user) {
+        $db = \F3il\Database::getInstance();
+
+        $sql = "SELECT creation FROM utilisateurs WHERE login= :login";
+        try {
+            $req = $db->prepare($sql);
+            $req->bindValue(':login', $user);
+            $req->execute();
+        } catch (\PDOException $ex) {
+            throw new \F3il\SqlError($sql, $req, $ex);
+        }
+
+        return $req->fetch(\PDO::FETCH_ASSOC);
     }
 
 }

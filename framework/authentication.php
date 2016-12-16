@@ -30,6 +30,11 @@ class Authentication {
         $this->loginKey = $this->authenticationModel->auth_getLoginKey();
         $this->passwordKey = $this->authenticationModel->auth_getPasswordKey();
         $this->idKey = $this->authenticationModel->auth_getUserIdKey();
+
+        if ($this->isLoggedIn()) {
+            $this->user = $this->authenticationModel->auth_getUserById($_SESSION[self::SESSION_KEY]);       
+            unset($this->user['motdepasse']);            
+        }
     }
 
     /**
@@ -84,14 +89,50 @@ class Authentication {
             return FALSE;
         }
         if (!$this->checkAuthenticationKeys($this->user)) {
-            //throw new Error('Modèle authentification');
+            throw new Error('Modèle authentification');
         }
-        if ($this->user[$this->passwordKey] != $password) {
+        $salt = $this->authenticationModel->auth_getSalt($login);
+        if ($this->user[$this->passwordKey] != hash('sha256', hash('sha256', $salt['creation']) . $password)) {
+            return FALSE;
+        }
+        $_SESSION[self::SESSION_KEY] = $this->user[$this->idKey];
+        return TRUE;
+    }
+
+    public function logout() {
+        $this->user = NULL;
+        unset($_SESSION[self::SESSION_KEY]);
+    }
+
+    public function isLoggedIn() {
+        if (!isset($_SESSION[self::SESSION_KEY])) {
             return FALSE;
         }
         return TRUE;
     }
-    
-    
+
+    /**
+     * Methode d'encodage du mot de passe
+     * @param type $password : mot de passe
+     * @param type $salt : sel 
+     * @return type : mot de passe encodé
+     */
+    public function hash($password, $salt) {
+        return hash('sha256', hash('sha256', $salt) . $password);
+    }
+
+    public function getLoggedUser() {
+        if (!$this->isLoggedIn()) {
+            throw new Error("Aucun utilisateur log");
+        }
+        return $this->user;
+    }
+
+    public function getLoggedUserId() {
+        if (!$this->isLoggedIn()) {
+            throw new Error("Aucun utilisateur log");
+        }
+        return $_SESSION[self::SESSION_KEY];
+    }
 
 }

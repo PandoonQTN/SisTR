@@ -18,6 +18,7 @@ defined('SISTR') or die("Accès interdit");
 class UtilisateurController extends \F3il\Controller {
 
     public function __construct() {
+        parent::redirectIfUnauthenticated("?controller=index&action=index");
         parent::setDefaultActionName("lister");
     }
 
@@ -61,8 +62,9 @@ class UtilisateurController extends \F3il\Controller {
         $form = new UtilisateurForm("?controller=utilisateur&action=creer");
         if (!\F3il\CsrfHelper::checkTocken()) {
             \F3il\Messenger::setMessage("Données de formulaire refusées");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
             }
             return;
         }
@@ -82,6 +84,7 @@ class UtilisateurController extends \F3il\Controller {
         $form->loadData(INPUT_POST);
         $formData = $form->getData();
 
+
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
             $model->creer($formData);
@@ -90,9 +93,6 @@ class UtilisateurController extends \F3il\Controller {
             \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
             \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
-            }
         }
     }
 
@@ -110,8 +110,9 @@ class UtilisateurController extends \F3il\Controller {
         $form = new UtilisateurForm("?controller=utilisateur&action=editer");
         if (!\F3il\CsrfHelper::checkTocken()) {
             \F3il\Messenger::setMessage("Données de formulaire refusées");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
             }
             return;
         }
@@ -151,10 +152,17 @@ class UtilisateurController extends \F3il\Controller {
             \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
             \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
             }
         }
+    }
+
+    public function deconnecterAction() {
+        $auth = \F3il\Authentication::getInstance();
+        $auth->logout();
+        \F3il\HttpHelper::redirect('?controller=suivi&action=lister');
     }
 
 }

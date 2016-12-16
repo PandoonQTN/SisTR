@@ -4,6 +4,9 @@ namespace Sistr;
 
 defined('SISTR') or die('Acces interdit');
 \F3il\Messages::setMessageRenderer('\Sistr\MessagesHelper::messagesRenderer');
+
+$auth = \F3il\Authentication::getInstance();
+$user = $auth->getLoggedUser();
 ?>  
 
 <!DOCTYPE html>
@@ -48,18 +51,19 @@ defined('SISTR') or die('Acces interdit');
 
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="drop3" role="button" aria-haspopup="true" > Quentin DOUCET <span class="caret"></span> </a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="drop3" role="button" aria-haspopup="true" >
+                                    <?php echo $user['prenom'] . " " . strtoupper($user['nom']); ?> 
+                                    <span class="caret"></span> </a>
                                 <ul class="dropdown-menu" aria-labelledby="drop3"> 
-                                    <li><a href="#">Deconnexion</a></li> 
+                                    <li><a href="?controller=utilisateur&action=deconnecter">Deconnexion</a></li> 
                             </li>
                         </ul>   
 
                     </div>
 
                 </div>
-            </nav>
-        </header>
-
+            </nav>            
+        </header>        
         [%VIEW%]
     </body>
 

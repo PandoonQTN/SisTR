@@ -98,9 +98,7 @@ abstract class Form {
             $field->value = $this->applyFilter($field->name, trim(filter_input($source, $field->name)));
             if (empty(trim($field->value)) && $field->required) {
                 $this->_missingFields[] = $field->name;
-            } else {
-                
-            }
+            } 
         }
     }
 
@@ -110,9 +108,9 @@ abstract class Form {
      * @return type
      */
     public function loadDataFromArray($source) {
+        var_dump("loadArray");
         foreach ($this->_fields as $field) {
             if (array_key_exists($field->name, $source)) {
-
                 var_dump(filter_var($source[$field->name]));
                 if (!empty(trim($source[$field->name]))) {
                     $field->value = $this->applyFilter($field->name, filter_var($source[$field->name]));
@@ -136,13 +134,13 @@ abstract class Form {
     }
 
     public function isValid() {
-        $valid = TRUE;
-        foreach ($this->_fields as $f) {
+        $valid = TRUE;       
+        foreach ($this->_fields as $f) {     
             if (in_array($f->name, $this->_missingFields)) {
                 $valid = FALSE;
             }
-            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields) || !empty($f->required)) {
-                $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';
+            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields)) {
+                $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';                
                 if (method_exists($this, $nom)) {
                     $valid = $this->$nom($f->value) && $valid;
                 }
@@ -182,7 +180,7 @@ abstract class Form {
 
     public function missingFieldMessageRenderer($field) {
         ?> 
-        <p class="text-danger text-right">Le champs <?php echo $field->name; ?> est manquant.</p>
+        <p class="text-danger text-right">Le champs <?php echo $field->label; ?> est manquant.</p>
         <?php
     }
 

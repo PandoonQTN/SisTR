@@ -7,6 +7,7 @@ defined('SISTR') or die("Accès interdit");
 class IndexController extends \F3il\Controller {
 
     public function __construct() {
+        parent::redirectIfAuthenticated("?controller=suivi&action=lister");
         parent::setDefaultActionName("index");
     }
 
@@ -22,10 +23,11 @@ class IndexController extends \F3il\Controller {
         $page->loginForm = $loginForm;
         if (!\F3il\CsrfHelper::checkTocken()) {
             \F3il\Messenger::setMessage("Données de formulaire refusées");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
             }
-            return;
+            //return;
         }
 
         //Si le formulaire n'a pas été envoyé
@@ -50,16 +52,18 @@ class IndexController extends \F3il\Controller {
         $auth = \F3il\Authentication::getInstance();
         if (!$auth->login($formData['login'], $formData['motdepasse'])) {
             \F3il\Messenger::setMessage("Login/Mot de passe incorrect");
-            if (\F3il\Messenger::getMessage()) {
-                \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_ERROR);
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
                 return;
             }
         }
         \F3il\Messenger::setMessage("Authentification réussie");
-        if (\F3il\Messenger::getMessage()) {
-            \F3il\Messages::addMessage(\F3il\Messenger::getMessage(), \F3il\Messages::MESSAGE_SUCCESS);
+        $mes = \F3il\Messenger::getMessage();
+        if ($mes) {
+            \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_SUCCESS);
         }
-        return;
+        \F3il\HttpHelper::redirect('?controller=suivi&action=lister');
     }
 
 }

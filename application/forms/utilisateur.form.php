@@ -79,6 +79,7 @@ class UtilisateurForm extends Form {
         $nb = filter_var($data, FILTER_SANITIZE_STRING);
         if (strlen($nb) <= 4) {
             $this->addMessage('motdepasse', "le mot de passe doit faire au moins 4 caractères");
+            
             return FALSE;
         }
         return TRUE;
@@ -97,10 +98,10 @@ class UtilisateurForm extends Form {
 
     public function isValid() {
         $valid = parent::isValid();
-        if($this->id == 0) return $valid;
-        if($this->motdepasse != '' && $this->confirmation == ''){
-            $valid = $this->confirmationValidator($this->confirmation) && $valid;
-        }
+//        if($this->id == 0) return $valid;
+//        if($this->motdepasse != '' && $this->confirmation == ''){
+//            $valid = $this->confirmationValidator($this->confirmation) && $valid;
+//        }
         return $valid;
     }
 }

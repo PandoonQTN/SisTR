@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/SisTR/framework/autoloader.php</file>
+            <file>file:/C:/wamp64/www/SisTR/framework/interfaces/authentication.interface.php</file>
             <file>file:/C:/wamp64/www/SisTR/framework/authentication.php</file>
+            <file>file:/C:/wamp64/www/SisTR/application/templates/application.template.php</file>
             <file>file:/C:/wamp64/www/SisTR/application/models/utilisateurs.model.php</file>
-            <file>file:/C:/wamp64/www/SisTR/framework/application.php</file>
-            <file>file:/C:/wamp64/www/SisTR/application/controllers/index.controller.php</file>
-            <file>file:/C:/wamp64/www/SisTR/index.php</file>
         </group>
     </open-files>
 </project-private>

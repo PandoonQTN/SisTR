@@ -6,13 +6,22 @@ defined('SISTR') or die('Acces interdit');
 
 use F3il\Form;
 
+/**
+ * Classe FormHelper
+ */
 abstract class FormHelper {
 
+    /**
+     * Fonctio permettant de créer un champs input
+     * @param Form $form
+     * @param type $fieldName
+     * @param type $type
+     */
     public static function input(Form $form, $fieldName, $type) {
         ?>
         <div class="form-group">
             <label for="<?php echo $form->fName($fieldName); ?>" class="col-sm-2 control-label">
-                <?php echo $form->fLabel($fieldName); ?> :
+        <?php echo $form->fLabel($fieldName); ?> :
             </label>
             <div class="col-sm-10">
                 <input type="<?php echo $type ?>" 

@@ -17,11 +17,17 @@ defined('SISTR') or die("Accès interdit");
  */
 class UtilisateurController extends \F3il\Controller {
 
+    /**
+     * Constructeur de la classe
+     */
     public function __construct() {
         parent::redirectIfUnauthenticated("?controller=index&action=index");
         parent::setDefaultActionName("lister");
     }
 
+    /**
+     * Fonction permettant de lister les utilisateurs
+     */
     public function listerAction() {
         $page = \F3il\Page::getInstance();
         $page->setTemplate("application")->setView("utilisateur-liste");
@@ -33,6 +39,10 @@ class UtilisateurController extends \F3il\Controller {
         }
     }
 
+    /**
+     * FOnction permettant de supprimer un utilisateur
+     * @throws \F3il\Error
+     */
     public static function supprimerAction() {
         $filter = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         if (is_null($filter)) {
@@ -47,6 +57,10 @@ class UtilisateurController extends \F3il\Controller {
         }
     }
 
+    /**
+     * Fonction permettant de créer un utilisateur 
+     * @return type
+     */
     public function creerAction() {
 
         //Récupérer l'instance de la page 
@@ -60,18 +74,7 @@ class UtilisateurController extends \F3il\Controller {
         $page->setPageTitle("Créer utilisateur");
         //Créer l'ojet formulaire
         $form = new UtilisateurForm("?controller=utilisateur&action=creer");
-        if (!\F3il\CsrfHelper::checkTocken()) {
-            \F3il\Messenger::setMessage("Données de formulaire refusées");
-            $mes = \F3il\Messenger::getMessage();
-            if ($mes) {
-                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
-            }
-            return;
-        }
-
-        $fieldid = $form->getField('id');
-        $fieldid->value = 0;
-
+        $form->id = 0;
         //Rattacher l'objet formulaire à la page
         $page->form = $form;
 
@@ -82,8 +85,15 @@ class UtilisateurController extends \F3il\Controller {
 
         //Charger les données depuis POST
         $form->loadData(INPUT_POST);
+        if (!\F3il\CsrfHelper::checkTocken()) {
+            \F3il\Messenger::setMessage("Données de formulaire refusées");
+            $mes = \F3il\Messenger::getMessage();
+            if ($mes) {
+                \F3il\Messages::addMessage($mes, \F3il\Messages::MESSAGE_ERROR);
+            }
+            return;
+        }
         $formData = $form->getData();
-
 
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
@@ -96,6 +106,10 @@ class UtilisateurController extends \F3il\Controller {
         }
     }
 
+    /**
+     * Fonction permettant d'éditer un utilisateur
+     * @return type
+     */
     public function editerAction() {
         //Récupérer l'instance de la page 
         $page = \F3il\Page::getInstance();
@@ -108,6 +122,15 @@ class UtilisateurController extends \F3il\Controller {
         $page->setPageTitle("Modifier utilisateur");
         //Créer l'ojet formulaire
         $form = new UtilisateurForm("?controller=utilisateur&action=editer");
+
+        $fieldmdp = $form->getField('motdepasse');
+        $fieldmdp->required = FALSE;
+        $fieldconfirmation = $form->getField('confirmation');
+        $fieldconfirmation->required = FALSE;
+
+        $form->loadData(INPUT_POST);
+        $id = $form->id;
+
         if (!\F3il\CsrfHelper::checkTocken()) {
             \F3il\Messenger::setMessage("Données de formulaire refusées");
             $mes = \F3il\Messenger::getMessage();
@@ -117,39 +140,25 @@ class UtilisateurController extends \F3il\Controller {
             return;
         }
 
-        $form->loadData(INPUT_POST);
-        $formData = $form->getData();
-        $id = $formData['id'];
-
-        $fieldmdp = $form->getField('motdepasse');
-        $fieldmdp->required = FALSE;
-        $fieldconfirmation = $form->getField('confirmation');
-        $fieldconfirmation->required = FALSE;
-
         //Rattacher l'objet formulaire à la page
         $page->form = $form;
 
         //Si le formulaire n'a pas été envoyé
         if (!$form->isSubmitted()) {
             $newFormData = $model->lire($id);
-            var_dump($newFormData);
-            var_dump(TRUE && FALSE);
             $form->loadData($newFormData);
-            $form->getField('id')->value;
-            $form->getField('nom')->value;
-            $form->getField('prenom')->value;
-            $form->getField('email')->value;
-            $form->getField('login')->value;
             $fieldmdp->value = "";
             $fieldconfirmation->value = "";
         }
 
-
+        $formData = $form->getData();
         //Si le formulaire n'est pas valide
         if ($form->isValid()) {
+            $model->mettreAJour($formData);
             \F3il\Messenger::setMessage("Le formulaire est valide");
             \F3il\Messenger::setMessage("L'utilisateur " . $formData['nom'] . " " . $formData['prenom'] . " a bien été modifié");
-            \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
+            if ($form->isSubmitted())
+                \F3il\HttpHelper::redirect('?controller=utilisateur&action=lister');
         } else {
             \F3il\Messenger::setMessage("Le formulaire n'est pas valide");
             $mes = \F3il\Messenger::getMessage();
@@ -159,6 +168,9 @@ class UtilisateurController extends \F3il\Controller {
         }
     }
 
+    /**
+     * Fonction permettant de déconnecter un utilisateur
+     */
     public function deconnecterAction() {
         $auth = \F3il\Authentication::getInstance();
         $auth->logout();

@@ -40,10 +40,17 @@ class Error extends \Exception {
         }
     }
 
+    /**
+     * Render destiné à la production
+     * @return string
+     */
     private function productionRender() {
         return "<h1>Oups</h1>";
     }
 
+    /**
+     * Render destiné au débugage
+     */
     public function debugRender() {
         $trace = $this->getTrace();
         ?>
@@ -67,12 +74,16 @@ class Error extends \Exception {
         </html>        <?php
     }
 
+    /**
+     * Fonction toString qui va afficher le bon render en fonction de la configuration
+     * @return type
+     */
     public function __toString() {
         ob_end_clean();
         if ($this->runMode == self::DEBUG) {
-            return $this->debugRender()."";
+            return $this->debugRender() . "";
         } elseif ($this->runMode == self::PRODUCTION) {
-            return $this->productionRender()."";
+            return $this->productionRender() . "";
         }
     }
 

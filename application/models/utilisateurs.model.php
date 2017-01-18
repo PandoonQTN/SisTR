@@ -4,8 +4,17 @@ namespace Sistr;
 
 defined('SISTR') or die('Acces interdit');
 
+/**
+ * Classe UtilisateurModel 
+ * Permet de gérer toutes les requêtes de BDD
+ */
 class UtilisateursModel implements \F3il\AuthenticationInterface {
 
+    /**
+     * Fonction permettant de récupérer tous les utilisateurs
+     * @return type
+     * @throws \F3il\SqlError
+     */
     public function lister() {
         $db = \F3il\Database::getInstance();
 
@@ -19,6 +28,11 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Fonction permettant de supprimer un utilisateur en fonction de son identifiant
+     * @param type $id
+     * @throws \F3il\SqlError
+     */
     public function supprimer($id) {
         $db = \F3il\Database::getInstance();
         $sql = "DELETE FROM utilisateurs WHERE id =" . $id;
@@ -30,6 +44,11 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         }
     }
 
+    /**
+     * Fonction permettant de créer un utilisateur
+     * @param type $data
+     * @throws \F3il\SqlError
+     */
     public function creer($data) {
         $date = date('Y-m-j H:i:s');
         $auth = \F3il\Authentication::getInstance();
@@ -51,12 +70,19 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         }
     }
 
+    /**
+     * Fonction permettant de savoir si un login existe déjà
+     * @param type $login
+     * @param type $id
+     * @return boolean
+     * @throws \F3il\SqlError
+     */
     public function loginExistant($login, $id) {
         $db = \F3il\Database::getInstance();
         $sql = "SELECT count(*) as res FROM utilisateurs WHERE login =:login";
 
         if (intval($id) != 0) {
-            $sql = $sql . " AND id = :id";
+            $sql = $sql . " AND id != :id";
         }
         try {
             $req = $db->prepare($sql);
@@ -75,6 +101,12 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         }
     }
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction de son identifiant
+     * @param type $id
+     * @return type
+     * @throws \F3il\SqlError
+     */
     public function lire($id) {
         $db = \F3il\Database::getInstance();
 
@@ -89,6 +121,11 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         return $req->fetch(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Fonction permetttant de mettre à jour un utilisateur
+     * @param type $data
+     * @throws \F3il\SqlError
+     */
     public function mettreAJour($data) {
         $db = \F3il\Database::getInstance();
         $sql = "UPDATE utilisateurs SET nom = :nom, prenom = :prenom, email = :email, login = :login ";
@@ -100,7 +137,7 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
 
         $auth = \F3il\Authentication::getInstance();
         $date = $this->auth_getSalt($data['login']);
-        $salt = $auth->hash($data['motdepasse'], $date);
+        $salt = $auth->hash($data['motdepasse'], $date['creation']);
 
         try {
             $req = $db->prepare($sql);
@@ -118,18 +155,37 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         }
     }
 
+    /**
+     * Fonction permettant de connaitre la LoginKey de l'utilisateur connecté
+     * @return string
+     */
     public function auth_getLoginKey() {
         return 'login';
     }
 
+    /**
+     *  Fonction permettant de connaitre la PasswordKey de l'utilisateur connecté
+     * @return string
+     */
     public function auth_getPasswordKey() {
         return 'motdepasse';
     }
 
+    /**
+     * Fonction permettant de connaitre les informations de l'utilisateur connecté en fonction de son identifiant
+     * @param type $id
+     * @return type
+     */
     public function auth_getUserById($id) {
         return $this->lire($id);
     }
 
+    /**
+     * Fonction permettant de connaitre les informations de l'utilisateur connecté en fonction de son login
+     * @param type $login
+     * @return type
+     * @throws \F3il\SqlError
+     */
     public function auth_getUserByLogin($login) {
         $db = \F3il\Database::getInstance();
 
@@ -145,10 +201,20 @@ class UtilisateursModel implements \F3il\AuthenticationInterface {
         return $req->fetch(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     *  Fonction permettant de connaitre la IDKey de l'utilisateur connecté
+     * @return string
+     */
     public function auth_getUserIdKey() {
         return 'id';
     }
 
+    /**
+     * Fonction permettant de connaitre le grain de sel pour le motdepasse
+     * @param type $user
+     * @return type
+     * @throws \F3il\SqlError
+     */
     public function auth_getSalt($user) {
         $db = \F3il\Database::getInstance();
 

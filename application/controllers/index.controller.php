@@ -4,13 +4,23 @@ namespace Sistr;
 
 defined('SISTR') or die("Accès interdit");
 
+/**
+ * Classe IndexController
+ */
 class IndexController extends \F3il\Controller {
 
+    /**
+     * Constructeur de la classe
+     */
     public function __construct() {
         parent::redirectIfAuthenticated("?controller=suivi&action=lister");
         parent::setDefaultActionName("index");
     }
 
+    /**
+     * Fonction permettant de gérer la connexion à l'index
+     * @return type
+     */
     public function indexAction() {
 
         //Récupérer l'instance de la page 
@@ -21,6 +31,13 @@ class IndexController extends \F3il\Controller {
 
         $loginForm = new LoginForm("?controller=index&action=index");
         $page->loginForm = $loginForm;
+
+        //Si le formulaire n'a pas été envoyé
+        if (!$loginForm->isSubmitted()) {
+            return;
+        }
+        //Charger les données depuis POST
+        $loginForm->loadData(INPUT_POST);
         if (!\F3il\CsrfHelper::checkTocken()) {
             \F3il\Messenger::setMessage("Données de formulaire refusées");
             $mes = \F3il\Messenger::getMessage();
@@ -30,12 +47,6 @@ class IndexController extends \F3il\Controller {
             //return;
         }
 
-        //Si le formulaire n'a pas été envoyé
-        if (!$loginForm->isSubmitted()) {
-            return;
-        }
-        //Charger les données depuis POST
-        $loginForm->loadData(INPUT_POST);
         $formData = $loginForm->getData();
 
         //Si le formulaire n'est pas valide

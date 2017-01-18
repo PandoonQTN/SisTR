@@ -32,8 +32,8 @@ class Authentication {
         $this->idKey = $this->authenticationModel->auth_getUserIdKey();
 
         if ($this->isLoggedIn()) {
-            $this->user = $this->authenticationModel->auth_getUserById($_SESSION[self::SESSION_KEY]);       
-            unset($this->user['motdepasse']);            
+            $this->user = $this->authenticationModel->auth_getUserById($_SESSION[self::SESSION_KEY]);
+            unset($this->user['motdepasse']);
         }
     }
 
@@ -99,11 +99,18 @@ class Authentication {
         return TRUE;
     }
 
+    /**
+     * Fonction permettant de se déconnecter
+     */
     public function logout() {
         $this->user = NULL;
         unset($_SESSION[self::SESSION_KEY]);
     }
 
+    /**
+     * Fonction permettant de savoir si quelqu'un est connecté
+     * @return boolean
+     */
     public function isLoggedIn() {
         if (!isset($_SESSION[self::SESSION_KEY])) {
             return FALSE;
@@ -121,6 +128,11 @@ class Authentication {
         return hash('sha256', hash('sha256', $salt) . $password);
     }
 
+    /**
+     * Fonction permettant de connaitre l'utilisateur connecté
+     * @return type
+     * @throws Error
+     */
     public function getLoggedUser() {
         if (!$this->isLoggedIn()) {
             throw new Error("Aucun utilisateur log");
@@ -128,6 +140,11 @@ class Authentication {
         return $this->user;
     }
 
+    /**
+     * Fonction permettant de connaitre l'id de l'utilisateur connecté
+     * @return type
+     * @throws Error
+     */
     public function getLoggedUserId() {
         if (!$this->isLoggedIn()) {
             throw new Error("Aucun utilisateur log");

@@ -114,6 +114,11 @@
             }
         }
         
+        /**
+         * Fonction permettant de charger une classe
+         * @param type $className
+         * @throws AutoloaderError
+         */
         private function loader($className) 
         {
             // Elimine les \ dans le nom de classe 

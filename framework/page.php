@@ -3,11 +3,6 @@
 namespace F3il;
 
 defined('F3IL') or die("Accès interdit");
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  * Description of page
@@ -209,6 +204,10 @@ class Page {
         }
     }
 
+    /**
+     * Fonction permettant d'ajouter le titre de à la page
+     * @return type
+     */
     public function insertPageTitle() {
         ob_start();
         ?>

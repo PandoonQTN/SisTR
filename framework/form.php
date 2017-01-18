@@ -94,11 +94,12 @@ abstract class Form {
      * @param type $source
      */
     public function loadDataFromInput($source) {
+
         foreach ($this->_fields as $field) {
             $field->value = $this->applyFilter($field->name, trim(filter_input($source, $field->name)));
-            if (empty(trim($field->value)) && $field->required) {
+            if (trim($field->value) == '' && $field->required) {
                 $this->_missingFields[] = $field->name;
-            } 
+            }
         }
     }
 
@@ -108,10 +109,8 @@ abstract class Form {
      * @return type
      */
     public function loadDataFromArray($source) {
-        var_dump("loadArray");
         foreach ($this->_fields as $field) {
             if (array_key_exists($field->name, $source)) {
-                var_dump(filter_var($source[$field->name]));
                 if (!empty(trim($source[$field->name]))) {
                     $field->value = $this->applyFilter($field->name, filter_var($source[$field->name]));
                 } else {
@@ -134,13 +133,15 @@ abstract class Form {
     }
 
     public function isValid() {
-        $valid = TRUE;       
-        foreach ($this->_fields as $f) {     
+        $valid = TRUE;
+        foreach ($this->_fields as $f) {
+            
             if (in_array($f->name, $this->_missingFields)) {
                 $valid = FALSE;
             }
-            if (!empty(trim($f->name)) || !in_array($f->name, $this->_missingFields)) {
-                $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';                
+            if (!empty(trim($f->value)) || in_array($f->name, $this->_missingFields)) {
+                $nom = str_replace('-', '', lcfirst(ucwords($f->name, '-'))) . 'Validator';
+                
                 if (method_exists($this, $nom)) {
                     $valid = $this->$nom($f->value) && $valid;
                 }
@@ -210,11 +211,11 @@ abstract class Form {
         if (!array_key_exists($fieldName, $this->_fields)) {
             throw new Error("Champs du formulaire inexistant");
         }
-        return $this->_fields[$fieldName];
+        return $this->_fields[$fieldName]->value;
     }
 
     public function __set($fieldName, $value) {
-        $this->data[$fieldName] = $value;
+        $this->_fields[$fieldName]->value = $value;
     }
 
     public function __isset($fieldName) {

@@ -4,8 +4,15 @@ namespace Sistr;
 
 defined('SISTR') or die("Accès interdit");
 
+/**
+ * Classe FormController
+ */
 class FormController extends \F3il\Controller {
 
+    /**
+     * Fonction permettant de savoir si le formulaire est valide ou non
+     * @return type
+     */
     public function formAction() {
         //Récupérer l'instance de la page 
         $page = \F3il\Page::getInstance();

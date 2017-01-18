@@ -3,7 +3,13 @@ namespace Sistr;
 defined('SISTR') or die('Acces interdit');
 use \F3il\Messages;
 
+/**
+ * Classe MessageHelper
+ */
 abstract class MessagesHelper {
+    /**
+     * Render des messages
+     */
     public static function messagesRenderer() {
         ?>
         <div id="messages">

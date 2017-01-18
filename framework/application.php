@@ -4,6 +4,9 @@ namespace F3il;
 
 defined('F3IL') or die("Accès interdit");
 
+/**
+ * Classe Application
+ */
 class Application {
 
     private static $_instance;
@@ -100,18 +103,34 @@ class Application {
         }
     }
 
+    /**
+     * Getter permettant connaitre le nom du controleur par défaut
+     * @return type 
+     */
     public function getDefaultControllerName() {
         return $this->defaultControllerName;
     }
 
+    /**
+     * Getter permettant de connaitre le nom du controleur
+     * @return type
+     */
     public function getControllerName() {
         return $this->controllerName;
     }
 
+    /**
+     * Getter permettant de connaitre le nom de l'action
+     * @return type
+     */
     public function getActionName() {
         return $this->actionName;
     }
 
+    /**
+     * Getter permettant de connaitre la position courante de l'utilisateur dans l'application
+     * @return type
+     */
     public function getCurrentLocation() {
         return array(
             'controller' => $this->getControllerName(),
@@ -119,6 +138,10 @@ class Application {
         );
     }
 
+    /**
+     * Setter permettant de définir le namespace de l'application pour atteindre la class passée en paramètre
+     * @param type $className
+     */
     public function setAuthenticationDelegate($className) {
         $class = APPLICATION_NAMESPACE . "\\" . $className;
         Authentication::getInstance(new $class());

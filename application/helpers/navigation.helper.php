@@ -4,6 +4,9 @@ namespace Sistr;
 
 defined('SISTR') or die('Acces interdit');
 
+/**
+ * Classe NavigationHelper
+ */
 abstract class NavigationHelper {
 
     private static $menu = array(
@@ -22,6 +25,9 @@ abstract class NavigationHelper {
         ),
     );
 
+    /**
+     * Render de la classe
+     */
     public static function render() {
         $app = \F3il\Application::getInstance();
         $tab = $app->getCurrentLocation();
@@ -35,12 +41,17 @@ abstract class NavigationHelper {
         <?php
     }
 
+    /**
+     * Render d'un item
+     * @param type $item
+     * @param type $location
+     */
     private static function itemRender($item, $location) {
         ?>
         <li<?php
-            if ($location['controller'] === $item['controller'] && $location['action'] === $item['action']) {
-                ?> class="active" <?php }
-            ?> >
+        if ($location['controller'] === $item['controller'] && $location['action'] === $item['action']) {
+            ?> class="active" <?php }
+        ?> >
             <a href="index.php?controller=<?php echo $item['controller']; ?>&action=<?php echo $item['action']; ?>"><?php echo $item['title'] ?></a>
         </li>
         <?php

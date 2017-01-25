@@ -63,8 +63,13 @@ $user = $auth->getLoggedUser();
 
                 </div>
             </nav>            
-        </header>        
-        [%VIEW%]
+        </header> 
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-push-1 col-sm-push-1 col-md-push-1 col-lg-push-1">
+
+            [%VIEW%]
+
+        </div>
+
     </body>
 
 </html>

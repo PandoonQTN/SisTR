@@ -22,6 +22,10 @@ abstract class NavigationHelper {
             'title' => 'Utilisateur',
             'controller' => 'utilisateur',
             'action' => 'lister'
+        ),array(
+            'title' => 'NOTE',
+            'controller' => 'note',
+            'action' => 'lister'
         ),
     );
 

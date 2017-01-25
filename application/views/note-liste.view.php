@@ -14,11 +14,12 @@ defined('SISTR') or die("Accès interdit");
     <div class="col-lg-12"></div>
 </div>
 
-<table class="table table-bordered table-condensed table-hover table-striped">
+<table class="table  table-hover">
     <thead>
         <tr>
             <th>Titre</th>
             <th>Text</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
